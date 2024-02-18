@@ -3,7 +3,6 @@ import axios from "axios";
 import "./pokemonList.css";
 import Pokemon from "../Pokemon/Pokemon";
 
-
 function PokemonList() {
   const [pokemonlist, setPokemonList] = useState([]);
 
@@ -19,18 +18,19 @@ function PokemonList() {
     const pokemonData = await axios.all(pokemonResultPromise);
     console.log(pokemonData);
 
-
-    const res =  pokemonData.map((pokeData) => {
-        const pokemon = pokeData.data;
-        return {
-          id:pokemon.id,
-          name: pokemon.name,
-          image: (pokemon.sprites.other)?pokemon.sprites.other.dream_world.front_default : pokemon.sprites.front_shiny,
-          types: pokemon.types,
-        };
-      })
-      console.log(res)
-setPokemonList(res)
+    const res = pokemonData.map((pokeData) => {
+      const pokemon = pokeData.data;
+      return {
+        id: pokemon.id,
+        name: pokemon.name,
+        image: pokemon.sprites.other
+          ? pokemon.sprites.other.dream_world.front_default
+          : pokemon.sprites.front_shiny,
+        types: pokemon.types,
+      };
+    });
+    console.log(res);
+    setPokemonList(res);
     setUseLoading(false);
   }
 
@@ -40,12 +40,19 @@ setPokemonList(res)
 
   return (
     <>
-
       <div className="pokemon-list-wrapper">
         <div>Pokemon List</div>
-
-        {isLoading ? "Loading....." : 
-        pokemonlist.map((p)=><Pokemon name={p.name} image={p.image} key ={p.id}/>)}
+        <div className="pokemon-wrapper">
+          {isLoading
+            ? "Loading....."
+            : pokemonlist.map((p) => (
+                <Pokemon name={p.name} image={p.image} key={p.id} />
+              ))}
+        </div>
+        <div>
+          <button>Prev</button>
+          <button>Next</button>
+        </div>
       </div>
     </>
   );
